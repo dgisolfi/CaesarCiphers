@@ -2,7 +2,10 @@
 # Author:  Daniel Nicolas Gisolfi
 
 intro:
-	@echo "\n            CMPT331 Ceaser Ciphers"
+	@echo "\nCMPT331 Ceaser Ciphers"
 
 basic: intro
 	@docker run --rm --name basic_dev -it -v ${PWD}/BASIC:/DEV/BASIC dgisolfi/basic_dev bash
+
+pascal: intro
+	@docker run --rm --name pascal_dev -it -v ${PWD}/Pascal:/DEV/Pascal dgisolfi/pascal_dev bash
