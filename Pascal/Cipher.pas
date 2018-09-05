@@ -19,27 +19,40 @@ begin
     writeln('> exit');
 end;
 
-procedure encrypt(var offset: Integer);
+procedure encrypt;
 var
-  Str: string;
-  Arr: array of Char;
+  str: string;
+  og: string;
   i: Integer;
-  Len: Integer;
 begin
-    ClrScr;
     write('Please input a string to be encrypted => ');
-    readln(Str);
-    Len := Length(Str);
-    SetLength(arr, Len);
-    for i := 1 to Len do
-        Arr[i - 1] := Str[i];
-    writeln(offset);
+    readln(str);
+    og := str;
 
+    for i := 1 to Length(str) do
+        if Ord(str[i]) >= Ord('Y') then
+            str[i] := Chr(Ord(str[i]) - 24)
+        else
+            str[i] := Chr(Ord(str[i]) + 2);
+    writeln(og + ' -> ' + str);
 end;
 
 procedure decrypt;
+var
+  str: string;
+  og: string;
+  i: Integer;
 begin
-    ClrScr;
+    write('Please input a string to be decrypted => ');
+    readln(str);
+    og := str;
+
+    for i := 1 to Length(str) do
+        if Ord(str[i]) >= Ord('Y') then
+            str[i] := Chr(Ord(str[i]) + 24)
+        else
+            str[i] := Chr(Ord(str[i]) - 2);
+    writeln(og + ' -> ' + str);
 end;
 
 procedure solve;
@@ -48,32 +61,38 @@ begin
 end;
 
 procedure main;
-var action: string;
+var 
+action: string;
+offset: Integer;
 begin
     offset := 6;
     repeat
-        ClrScr;
         writeln('Run "help" for a list of possible commands');
         write('What would you like to do => ');
         readln(action);
         if (action = 'help') then
             begin
                 help;
+                writeln('Press Enter to Continue');
                 readln;
+                ClrScr;
             end;
         if (action = 'encrypt') then
             begin
-                encrypt(offset);
+                encrypt;
+                writeln('Press Enter to Continue');
                 readln;
             end;
         if (action = 'decrypt') then
             begin
                 decrypt;
+                writeln('Press Enter to Continue');
                 readln;
             end;
         if (action = 'solve') then
             begin
                 decrypt;
+                writeln('Press Enter to Continue');
                 readln;
             end;
     until (action = 'exit');
