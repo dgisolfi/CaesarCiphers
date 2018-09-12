@@ -19,39 +19,46 @@ begin
     writeln('> exit');
 end;
 
-procedure encrypt;
+procedure encrypt(var offset: Integer);
 var
   str: string;
   og: string;
   i: Integer;
 begin
+    // request input to be encrypted
     write('Please input a string to be encrypted => ');
     readln(str);
     og := str;
 
+    // each character is incremented 6 characters within ASCII
     for i := 1 to Length(str) do
-        if Ord(str[i]) >= Ord('Y') then
-            str[i] := Chr(Ord(str[i]) - 24)
-        else
-            str[i] := Chr(Ord(str[i]) + 2);
+        // check if value of current char is any lower or uppercase char
+        case str[i] of
+            'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') + offset) mod 26);
+            'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') + offset) mod 26);
+        end;
+    // show original vs result
     writeln(og + ' -> ' + str);
 end;
 
-procedure decrypt;
+procedure decrypt(var offset: Integer);
 var
   str: string;
   og: string;
   i: Integer;
 begin
+    // request input to be dsecrypted
     write('Please input a string to be decrypted => ');
     readln(str);
     og := str;
-
+    // each character is unincremented 6 characters within ASCII
     for i := 1 to Length(str) do
-        if Ord(str[i]) >= Ord('Y') then
-            str[i] := Chr(Ord(str[i]) + 24)
-        else
-            str[i] := Chr(Ord(str[i]) - 2);
+        // check if value of current char is any lower or uppercase char
+        case str[i] of
+            'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') - offset + 26) mod 26);
+            'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') - offset + 26) mod 26);
+        end;
+    // show original vs result
     writeln(og + ' -> ' + str);
 end;
 
@@ -61,11 +68,13 @@ begin
 end;
 
 procedure main;
+
 var 
 action: string;
 offset: Integer;
+
 begin
-    offset := 6;
+    offset := 10;
     repeat
         writeln('Run "help" for a list of possible commands');
         write('What would you like to do => ');
@@ -79,27 +88,25 @@ begin
             end;
         if (action = 'encrypt') then
             begin
-                encrypt;
+                encrypt(offset);
                 writeln('Press Enter to Continue');
                 readln;
             end;
         if (action = 'decrypt') then
             begin
-                decrypt;
+                decrypt(offset);
                 writeln('Press Enter to Continue');
                 readln;
             end;
         if (action = 'solve') then
             begin
-                decrypt;
+                solve;
                 writeln('Press Enter to Continue');
                 readln;
             end;
     until (action = 'exit');
 end;
 
-var
-    offset: Integer;
 begin 
     ClrScr;
     intro;
