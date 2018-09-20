@@ -1,3 +1,5 @@
+// Daniel Nicolas Gisolfi
+// 2018-09-03
 program Cipher;
 uses Crt;
 
@@ -19,17 +21,10 @@ begin
     writeln('> exit');
 end;
 
-procedure encrypt(var offset: Integer);
+function encrypt(var str: string; var offset: Integer): string;
 var
-  str: string;
-  og: string;
   i: Integer;
 begin
-    // request input to be encrypted
-    write('Please input a string to be encrypted => ');
-    readln(str);
-    og := str;
-
     // each character is incremented 6 characters within ASCII
     for i := 1 to Length(str) do
         // check if value of current char is any lower or uppercase char
@@ -37,20 +32,13 @@ begin
             'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') + offset) mod 26);
             'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') + offset) mod 26);
         end;
-    // show original vs result
-    writeln(og + ' -> ' + str);
+        encrypt := str;
 end;
 
-procedure decrypt(var offset: Integer);
+function decrypt(var str: string; var offset: Integer): string;
 var
-  str: string;
-  og: string;
   i: Integer;
 begin
-    // request input to be dsecrypted
-    write('Please input a string to be decrypted => ');
-    readln(str);
-    og := str;
     // each character is unincremented 6 characters within ASCII
     for i := 1 to Length(str) do
         // check if value of current char is any lower or uppercase char
@@ -58,22 +46,20 @@ begin
             'A'..'Z': str[i] := chr(ord('A') + (ord(str[i]) - ord('A') - offset + 26) mod 26);
             'a'..'z': str[i] := chr(ord('a') + (ord(str[i]) - ord('a') - offset + 26) mod 26);
         end;
-    // show original vs result
-    writeln(og + ' -> ' + str);
-end;
-
-procedure solve;
-begin
-    ClrScr;
+    decrypt := str;
 end;
 
 procedure main;
-
 var 
 action: string;
 offset: Integer;
+str: string;
+og: string;
+i: Integer;
+maxShift: Integer;
 
 begin
+    // defualt value for key
     offset := 10;
     repeat
         writeln('Run "help" for a list of possible commands');
@@ -88,22 +74,58 @@ begin
             end;
         if (action = 'encrypt') then
             begin
-                encrypt(offset);
+                // request input to be encrypted
+                write('Please input a string to be encrypted => ');
+                readln(str);
+                og := str;
+                // request the desired key for encryption
+                write('Please input the key to be used => ');
+                readln(offset);
+              
+                // show original vs result
+                writeln(og + ' -> ' + encrypt(str, offset));
                 writeln('Press Enter to Continue');
                 readln;
             end;
         if (action = 'decrypt') then
             begin
-                decrypt(offset);
+                // request input to be encrypted
+                write('Please input a string to be decrypted => ');
+                readln(str);
+                og := str;
+                // request the desired key for decryption
+                write('Please input the key to be used => ');
+                readln(offset);
+              
+                // show original vs result
+                writeln(og + ' -> ' + decrypt(str, offset));
                 writeln('Press Enter to Continue');
                 readln;
             end;
+        
         if (action = 'solve') then
             begin
-                solve;
+                // request input to be encrypted
+                write('Please input a string to be solved for => ');
+                readln(str);
+                og := str;
+                // request the desired key for decryption
+                write('Please input the Max Shift Value => ');
+                readln(offset);
+                maxShift:= offset;
+
+
+                for i := 0 to maxShift do
+                    begin
+                        offset := i;
+                        str := og;
+                        writeln('Caesar ', offset, ' -> ' + encrypt(str, offset));
+                    end;
+
                 writeln('Press Enter to Continue');
                 readln;
             end;
+
     until (action = 'exit');
 end;
 
