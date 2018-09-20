@@ -7,3 +7,5 @@
 | 2018-09-20 |   1   | Rewrote all Procedures as functions in order to get a return value. After looking at the second page of the assigment I was happy to see my program was already cappable of solving. Pascal is complete. |
 | 2018-09-20 |  na   | Final thoughts: Pascal is not as tedious as java. There are a few oddities that slowed me down however I would consider writing a command line program in Pascal if time was not a factor. |
 
+To run the program use ./Cipher in the same directory as the Cipher file
+
