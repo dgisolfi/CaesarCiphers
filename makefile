@@ -4,6 +4,9 @@
 intro:
 	@echo "\nCMPT331 Ceaser Ciphers"
 
+fortran: intro
+	@docker run --rm --name fortran_dev -it -v ${PWD}/Fortran:/DEV/Fortran dgisolfi/fortran_dev bash
+
 basic: intro
 	@docker run --rm --name basic_dev -it -v ${PWD}/BASIC:/DEV/BASIC dgisolfi/basic_dev bash
 
