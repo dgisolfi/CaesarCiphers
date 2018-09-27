@@ -12,3 +12,6 @@ basic: intro
 
 pascal: intro
 	@docker run --rm --name pascal_dev -it -v ${PWD}/Pascal:/DEV/Pascal dgisolfi/pascal_dev bash
+
+scala: intro
+	@docker run --rm --name scala_dev -it -v ${PWD}/Scala:/DEV/Scala dgisolfi/scala_dev bash
