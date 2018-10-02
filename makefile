@@ -15,3 +15,6 @@ pascal: intro
 
 scala: intro
 	@docker run --rm --name scala_dev -it -v ${PWD}/Scala:/DEV/Scala dgisolfi/scala_dev bash
+
+cobol: intro
+	@docker run --rm --name cobol_dev -it -v ${PWD}/COBOL:/DEV/COBOL dgisolfi/cobol_dev bash
