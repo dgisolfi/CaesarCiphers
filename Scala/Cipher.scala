@@ -29,7 +29,7 @@ object Cipher {
         // shift uppers
         case str if alphaU.contains(str) => rot(alphaU, str, key)
         // shift normal case
-        case str if alphaL.contains(c) => rot(alphaL, str, key)
+        case str if alphaL.contains(str) => rot(alphaL, str, key)
         // assign the new val
         case str => str
     }

@@ -4,7 +4,7 @@ program Cipher
   integer :: offset = 10    
 
   ! Input string to be encrypted 
-  character(3) :: str = 'DAN'
+  character(3) :: str = 'HAL'
   character(3) :: og = ''
   character(3) :: encrypted = ''
   og = str
@@ -69,6 +69,7 @@ subroutine solve(text, og)
   
   ! The easy part.....call encrypt 27 times
   do i = 0, 26
+    text = og
     call encrypt(text, i)
     ! convert int to string.....I miss .lower()
     write(key, '(I2)') i 
