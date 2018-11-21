@@ -1,5 +1,5 @@
 (* DANIEL NICOLAS GISOLFI *)
-(* CASER CHIPHER *)
+(* CAESAR CHIPHER *)
 
 (* The following two functions exist to make the code more
 readable as well as keep me sane... for now *)
@@ -21,15 +21,14 @@ fun offset(key:int, ch:char):char =
     else ch
 ;
 
-  (* fun shift n c = if Char.isLower c
-                  then int2let((let2int c + n) mod 26)
-                  else c *)
+(* fun shift n c = if Char.isLower c
+              then int2let((let2int c + n) mod 26)
+              else c *)
 
 fun encrypt(str:string,key:int):string =
     (* (explode(str)).hd *)
-    val f = implode o map (offset key) o explode
+    implode str map (offset key) str explode
     (* if String.isLower str then *)
-    
     (* else str *)
 ;
 
@@ -39,4 +38,4 @@ val t = offset(#"d",6)
 val test = encrypt("fish", 6)
 (* TEST IT BOI *)
 
-implode "dan" map (offset 6) "dan" explode
+(* implode "dan" map (offset 6) "dan" explode *)
