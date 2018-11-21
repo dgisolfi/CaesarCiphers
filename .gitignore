@@ -1,5 +1,8 @@
 .DS_Store
 *.o
 Cipher$*
+ceaser$*
 .vs
 .vscode
+ceaser
+*.hi
