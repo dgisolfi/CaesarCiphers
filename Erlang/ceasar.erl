@@ -26,11 +26,12 @@ decrypt(Str, Key) ->
   io:format("Decrypted => ~s~n", [decrypted]).
  
 main() ->
-  OG = "fucker",
+  OG = "TEST",
   Key = 6,
   Encode = key(Key),
   Decode = key(-Key),
 
+  
   Encrypted = lists:map(fun(Char) -> offset(Char, Encode) end, OG),
   Decrypted = lists:map(fun(Char) -> offset(Char, Decode) end, encrypted),
 
