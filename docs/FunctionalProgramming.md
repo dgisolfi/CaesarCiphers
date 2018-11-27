@@ -1,6 +1,6 @@
-# Programming In The Past 
+# Functional Programming
 
-Daniel Gisolfi
+**Daniel Gisolfi**
 
 ## LISP
 
@@ -290,3 +290,182 @@ Done
 * strange choice of concatenation symbols in the syntax `++`, gave me some weird errors when I was attempting to increment an int by doing `cur++`.
 * Haskell grew on me during the process(only took me an hour and a half for the whole thing), it wasn't too difficult mostly due to the great documentation readily available. Still probably would rather write a CLI application in Java, C or even python before Haskell.
 
+## ML
+
+### Code 
+
+*Sorry SML is not supported for syntax highlighting :(* 
+
+```haskell
+(* DANIEL NICOLAS GISOLFI *)
+(* CAESAR CHIPHER *)
+
+(* The following two functions exist to make the code more
+readable as well as keep me sane... for now *)
+
+(* given an integer return the char value of it *)
+fun toChar(i:int):char = 
+    chr (ord #"a" + i)
+;
+
+(* given a char return the numeric value of it *)
+fun toInt(ch:char):int = 
+    ord ch - ord #"a"
+;
+
+(* Using the prev two funcs, shift the lowercase char by the key *)
+fun shiftChar key ch: char =
+    if Char.isLower ch
+        then toChar((toInt(ch) + key) mod 26)
+    else ch
+;
+
+(* 
+There is no easy way to do this without the map function
+the difficult task was to figure out how to use the map function while
+the fn your passing through takes more than one arguement
+The documentation is lacking.
+ *)
+fun encrypt(str:string, key:int): string = 
+    let 
+        val chars = explode(str)
+        val shiftedChars = map (shiftChar key) chars
+    in
+        implode shiftedChars
+    end
+;
+
+(* Just negate it and send it through *)
+fun decrypt(str:string,key:int): string = 
+    encrypt(str, ~key)
+;
+
+(* Recursion is easier than a for loop for this *)
+fun solve(str:string, cur:int, lim:int) = 
+    let
+        val c = cur + 1
+        val curStr = Int.toString(cur)
+        val encrypted = encrypt(str, cur)
+    in
+        (* print the encryption for the given key *)
+        print("Ceasar " ^ curStr ^ ": " ^ encrypted ^ "\n");
+        (* if the limit has not been reached call the fn again*)
+        if cur <> lim
+            then solve(str, c, lim)
+        (* are we there yet? *)
+        else print("done\n")
+    end
+;
+
+(* TEST IT ALL *)
+val og = "hal";
+val _ = print("ORIGINAL ------->  " ^ og ^ "\n");
+val _ = print("ENCRYPTED -------> " ^ encrypt(og, 6) ^ "\n");
+val _ = print("DECRYPTED -------> " ^ decrypt(og, 6) ^ "\n");
+solve(og, 0, 26);
+```
+
+### Output
+
+**Case 1**
+
+```
+ORIGINAL ------->  hal
+ENCRYPTED -------> ngr
+DECRYPTED -------> buf
+Ceasar 0: hal
+Ceasar 1: ibm
+Ceasar 2: jcn
+Ceasar 3: kdo
+Ceasar 4: lep
+Ceasar 5: mfq
+Ceasar 6: ngr
+Ceasar 7: ohs
+Ceasar 8: pit
+Ceasar 9: qju
+Ceasar 10: rkv
+Ceasar 11: slw
+Ceasar 12: tmx
+Ceasar 13: uny
+Ceasar 14: voz
+Ceasar 15: wpa
+Ceasar 16: xqb
+Ceasar 17: yrc
+Ceasar 18: zsd
+Ceasar 19: ate
+Ceasar 20: buf
+Ceasar 21: cvg
+Ceasar 22: dwh
+Ceasar 23: exi
+Ceasar 24: fyj
+Ceasar 25: gzk
+Ceasar 26: hal
+done
+```
+
+
+
+**Case 2**
+
+```logs
+ORIGINAL ------->  ml redefines the word fragile
+ENCRYPTED -------> sr xkjklotky znk cuxj lxgmork
+DECRYPTED -------> gf lyxyzchym nby qilx zluacfy
+Ceasar 0: ml redefines the word fragile
+Ceasar 1: nm sfefgjoft uif xpse gsbhjmf
+Ceasar 2: on tgfghkpgu vjg yqtf htcikng
+Ceasar 3: po uhghilqhv wkh zrug iudjloh
+Ceasar 4: qp vihijmriw xli asvh jvekmpi
+Ceasar 5: rq wjijknsjx ymj btwi kwflnqj
+Ceasar 6: sr xkjklotky znk cuxj lxgmork
+Ceasar 7: ts ylklmpulz aol dvyk myhnpsl
+Ceasar 8: ut zmlmnqvma bpm ewzl nzioqtm
+Ceasar 9: vu anmnorwnb cqn fxam oajprun
+Ceasar 10: wv bonopsxoc dro gybn pbkqsvo
+Ceasar 11: xw cpopqtypd esp hzco qclrtwp
+Ceasar 12: yx dqpqruzqe ftq iadp rdmsuxq
+Ceasar 13: zy erqrsvarf gur jbeq sentvyr
+Ceasar 14: az fsrstwbsg hvs kcfr tfouwzs
+Ceasar 15: ba gtstuxcth iwt ldgs ugpvxat
+Ceasar 16: cb hutuvydui jxu meht vhqwybu
+Ceasar 17: dc ivuvwzevj kyv nfiu wirxzcv
+Ceasar 18: ed jwvwxafwk lzw ogjv xjsyadw
+Ceasar 19: fe kxwxybgxl max phkw yktzbex
+Ceasar 20: gf lyxyzchym nby qilx zluacfy
+Ceasar 21: hg mzyzadizn ocz rjmy amvbdgz
+Ceasar 22: ih nazabejao pda sknz bnwceha
+Ceasar 23: ji obabcfkbp qeb tloa coxdfib
+Ceasar 24: kj pcbcdglcq rfc umpb dpyegjc
+Ceasar 25: lk qdcdehmdr sgd vnqc eqzfhkd
+Ceasar 26: ml redefines the word fragile
+done
+```
+
+
+
+### Log
+
+#### 2018-11-13 
+
+* okay...so ML is frustrating as the compiler errors are not so helpful. 
+* However I was able to create a function to convert from a char to an int and vice versa. Using that I can now shift a single character...Now just to get it to do that for a whole list of chars.
+* Alrighty so the compiler likes to say `caser.sml:24.39 Error: syntax error: inserting  EQUALOP` but that's not the actual error, guess and check it is then.
+
+#### 2018-11-14
+
+* I hate LISP, I'm returning to ML and its "bitchy" compiler...in more than just type declaration.
+* One of my favorite parts of ML so far is the Syntax, I usually find semicolons ugly however the way ML implements them, (using them a bit more sparingly) is satisfying and actually helpful. (Possibly a good addition to python...final project maybe?)
+
+#### 2018-11-25
+
+* Why am I still not done with ML I started this one first!?
+* The error I was getting had something to do with simply using 'offset' as the function name...... I tried googling if its a keyword, doesn't look like it, possibly a reserved word.
+* Thanks to the not so helpful compiler that bug took a few hours to discover.
+
+#### 2018-11-26
+
+* The compiler is so finicky that I resorted to opening a small environment and typing in the commands one by one. 
+* This compiler is worse than LISP's
+* Finally I have made progress, encrypt and decrypt work. Now time for solve, it may be easier to do it recursively as ML is hard to work with.
+* It's an odd thing when recursion is easier to use than a for loop...I like it
+* I will not be returning to this language unless I use a different compiler, im a fan of the syntax though.
