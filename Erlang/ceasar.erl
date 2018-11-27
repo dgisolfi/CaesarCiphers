@@ -1,5 +1,5 @@
 -module(ceasar).
--export([main/0, offset/2, key/1, encrypt/2, decrypt/2]).
+-export([main/0, offset/2, key/1, encrypt/2, decrypt/2, solve/3]).
 
 offset(Char,Key) when (Char >= $A) and (Char =< $Z) or
                    (Char >= $a) and (Char =< $z) ->
@@ -9,7 +9,7 @@ offset(Char,Key) when (Char >= $A) and (Char =< $Z) or
 offset(Char, _Key) ->
   Char.
  
-%% key: normalize key.
+% key: normalize key.
 key(Key) when Key < 0 ->
   26 + Key rem 26;
 key(Key) when Key > 25 ->
@@ -18,23 +18,34 @@ key(Key) ->
   Key.
 
 encrypt(Str, Key) ->
-  encrypted = lists:map(fun(Char) -> offset(Char, Key) end, Str),
-  io:format("Encrypted => ~s~n", [encrypted]).
+  [lists:map(fun(Char) -> offset(Char, Key) end, Str)].
 
 decrypt(Str, Key) ->
-  decrypted = lists:map(fun(Char) -> offset(Char, Key) end, Str),
-  io:format("Decrypted => ~s~n", [decrypted]).
+  % Key = key(-k),
+  encrypt(Str, -Key).
+
+solve(Str, Cur, Lim) ->
+  c = cur + 1,
+  encrypted = encrypt(Str, Cur),
+  io:format("Ceasar :~s~n", [encrypted]),
+  if 
+    cur == Lim -> 
+      io:fwrite("Done"); 
+    true -> 
+      solve(Str, c, Lim);
+  end.
+
  
 main() ->
-  OG = "TEST",
+  OG = "HAL",
   Key = 6,
-  Encode = key(Key),
-  Decode = key(-Key),
+  % Encode = key(Key),
+  % Decode = key(-Key),
 
-  
-  Encrypted = lists:map(fun(Char) -> offset(Char, Encode) end, OG),
-  Decrypted = lists:map(fun(Char) -> offset(Char, Decode) end, encrypted),
+  Encrypted = encrypt(OG, Key),
+  Decrypted = decrypt(Encrypted, Key),
 
-  io:format("Plaintext => ~s~n", [OG]),
-  io:format("Encrypted => ~s~n", [Encrypted]),
-  io:format("Decrypted => ~s~n", [Decrypted]).
+  io:format("Original  ---> ~s~n", [OG]),
+  io:format("Encrypted ---> ~s~n", [Encrypted]),
+  io:format("Decrypted ---> ~s~n", [Decrypted]),
+  solve(OG, 0, 26).
