@@ -177,7 +177,7 @@ offset key ch
 solve :: String -> Int -> Int -> IO ()
 solve str cur lim = do
     let encode = encrypt (cur) str
-    let out = "Ceaser " ++ show cur ++ ": " ++ encode
+    let out = "Ceasar " ++ show cur ++ ": " ++ encode
     putStrLn out
     let c = cur + 1
     if cur /= lim
@@ -469,3 +469,177 @@ done
 * Finally I have made progress, encrypt and decrypt work. Now time for solve, it may be easier to do it recursively as ML is hard to work with.
 * It's an odd thing when recursion is easier to use than a for loop...I like it
 * I will not be returning to this language unless I use a different compiler, im a fan of the syntax though.
+
+
+
+## Erlang
+
+### Code
+
+```erlang
+-module(ceasar).
+% Define all functions and how many parama they take
+-export([main/0, offset/2, encrypt/2, decrypt/2, solve/3]).
+
+% offset a single char by the key, if the key is out of range
+% just return back the given char
+offset(Char,Key) when (Char >= $A) and (Char =< $Z) or
+                   (Char >= $a) and (Char =< $z) ->
+  Offset = $A + Char band 32,
+  N = Char - Offset,
+  Offset + (N + Key) rem 26;
+offset(Char, _Key) ->
+  Char.
+ 
+% Using Basically what I learned from ML, conver the string to chars
+% and using map pass each element of the list to the offset function 
+% one at a time.
+encrypt(Str, Key) ->
+  lists:map(fun(Char) -> offset(Char, Key) end, Str).
+
+% negate the key and call encrypt
+decrypt(Str, Key) ->
+  encrypt(Str, -Key).
+
+% Base case -> if the limit has been reached stop looping...
+solve(Str, Cur, Lim) when Cur == Lim+1 ->
+  io:fwrite("Done\n");
+% Otherwise call encrypt, print the result and keep looping
+solve(Str, Cur, Lim) ->
+  C = Cur + 1,
+  Encrypted = encrypt(Str, Cur),
+  io:format("Ceasar ~p: ~s~n", [Cur ,Encrypted]),
+  solve(Str, C, Lim).
+ 
+main() ->
+  OG = "Rush's self titled EP is their best album",
+  Key = 6,
+
+  Encrypted = encrypt(OG, Key),
+  Decrypted = decrypt(Encrypted, Key),
+
+  % Printing stuff is quite ugly :(
+  io:format("Original  ---> ~s~n", [OG]),
+  io:format("Encrypted ---> ~s~n", [Encrypted]),
+  io:format("Decrypted ---> ~s~n", [Decrypted]),
+  solve(OG, 0, 26).
+```
+
+### Output
+
+**Case 1**
+
+```
+Original  ---> HAL
+Encrypted ---> NGR
+Decrypted ---> HAL
+Ceasar 0: HAL
+Ceasar 1: IBM
+Ceasar 2: JCN
+Ceasar 3: KDO
+Ceasar 4: LEP
+Ceasar 5: MFQ
+Ceasar 6: NGR
+Ceasar 7: OHS
+Ceasar 8: PIT
+Ceasar 9: QJU
+Ceasar 10: RKV
+Ceasar 11: SLW
+Ceasar 12: TMX
+Ceasar 13: UNY
+Ceasar 14: VOZ
+Ceasar 15: WPA
+Ceasar 16: XQB
+Ceasar 17: YRC
+Ceasar 18: ZSD
+Ceasar 19: ATE
+Ceasar 20: BUF
+Ceasar 21: CVG
+Ceasar 22: DWH
+Ceasar 23: EXI
+Ceasar 24: FYJ
+Ceasar 25: GZK
+Ceasar 26: HAL
+Done
+```
+
+**Case 2**
+
+```
+Original  ---> Rush's self titled EP is their best album
+Encrypted ---> Xayn'y ykrl zozrkj KV oy znkox hkyz grhas
+Decrypted ---> R[sh's self titled EP is their best alb[m
+Ceasar 0: Rush's self titled EP is their best album
+Ceasar 1: Svti't tfmg ujumfe FQ jt uifjs cftu bmcvn
+Ceasar 2: Twuj'u ugnh vkvngf GR ku vjgkt dguv cndwo
+Ceasar 3: Uxvk'v vhoi wlwohg HS lv wkhlu ehvw doexp
+Ceasar 4: Vywl'w wipj xmxpih IT mw xlimv fiwx epfyq
+Ceasar 5: Wzxm'x xjqk ynyqji JU nx ymjnw gjxy fqgzr
+Ceasar 6: Xayn'y ykrl zozrkj KV oy znkox hkyz grhas
+Ceasar 7: Ybzo'z zlsm apaslk LW pz aolpy ilza hsibt
+Ceasar 8: Zcap'a amtn bqbtml MX qa bpmqz jmab itjcu
+Ceasar 9: Adbq'b bnuo crcunm NY rb cqnra knbc jukdv
+Ceasar 10: Becr'c covp dsdvon OZ sc drosb locd kvlew
+Ceasar 11: Cfds'd dpwq etewpo PA td esptc mpde lwmfx
+Ceasar 12: Dget'e eqxr fufxqp QB ue ftqud nqef mxngy
+Ceasar 13: Ehfu'f frys gvgyrq RC vf gurve orfg nyohz
+Ceasar 14: Figv'g gszt hwhzsr SD wg hvswf psgh ozpia
+Ceasar 15: Gjhw'h htau ixiats TE xh iwtxg qthi paqjb
+Ceasar 16: Hkix'i iubv jyjbut UF yi jxuyh ruij qbrkc
+Ceasar 17: Iljy'j jvcw kzkcvu VG zj kyvzi svjk rcsld
+Ceasar 18: Jmkz'k kwdx laldwv WH ak lzwaj twkl sdtme
+Ceasar 19: Knla'l lxey mbmexw XI bl maxbk uxlm teunf
+Ceasar 20: Lomb'm myfz ncnfyx YJ cm nbycl vymn ufvog
+Ceasar 21: Mpnc'n nzga odogzy ZK dn oczdm wzno vgwph
+Ceasar 22: Nqod'o oahb pephaz AL eo pdaen xaop whxqi
+Ceasar 23: Orpe'p pbic qfqiba BM fp qebfo ybpq xiyrj
+Ceasar 24: Psqf'q qcjd rgrjcb CN gq rfcgp zcqr yjzsk
+Ceasar 25: Qtrg'r rdke shskdc DO hr sgdhq adrs zkatl
+Ceasar 26: Rush's self titled EP is their best album
+Done
+```
+
+### Log
+
+# Erlang Log
+
+#### 2018-11-24
+* I have so many questions for Joe Armstrong, here are a few...
+  * Why on earth eould you force variables to start with Uppercase characters?
+  * Why would you not implement better errors for detecting variables with lowercase characters?
+  * Why the commas? I'm not a fan of semi colons but I have to admit they look better than commas.
+* Instead of telling you that youve used a lowercase variables erlang just mentions that the left and right side of the assigment do not match, which leads one to belive your returning the wrong type rather than just breaking syntax with your variable name.
+* Im not a fan of the almost assumed return value in many of these languages like Erlang and ML, instead of saying return you just kinda leave it there, its not very readable.
+* The only thing I have working is a function to offset the char given a key, progress but not much...
+
+#### 2018-11-27
+
+* I'm back with a vengence!
+
+* I have the encrypt function working now at least, this compiler is very paticular, some of the code was only working in main and not encrypt
+
+* Also decrypt is done cuz passing a negative key is easy
+
+* Finally its time for solve, gonna do it recursivly again to embrace function programming(also i figured the logic of it out back in the Haskell one so im just kind rewriting the same function)
+
+* Trying to have an if check in the Solve function for my base case, it will not compile here it is..
+
+  ```erlang
+  % I put this snippet in as this is not how the final version looks
+  solve(Str, Cur, Lim) ->
+    C = Cur + 1,
+    Encrypted = encrypt(Str, Cur),
+    io:format("Ceasar ~p: ~s~n", [Cur ,Encrypted]),
+    if
+        Cur == Lim -> 
+          io:fwrite("Done\n");
+        ture ->  
+    		solve(Str, C, Lim);
+    end.
+  ```
+
+
+* So looking at this above snippet there should be no error, this is a simple if expression, the true acts as a else clause. However this will not compile, I used multiple resources to find this syntax, why doesnt it work?
+* The reason I later found out is that apparantly the conditions must return a value(neither does) as well as that each return value must be of the same type. This limits if expressions so much that i just refused to use them.
+* The solution I found was to use what I can only describe as function cases.(also used in the offset function)
+* Erlang may be powerful, but I would need a very good reason to use it at all.

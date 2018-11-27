@@ -32,7 +32,7 @@ offset key ch
 solve :: String -> Int -> Int -> IO ()
 solve str cur lim = do
     let encode = encrypt (cur) str
-    let out = "Ceaser " ++ show cur ++ ": " ++ encode
+    let out = "Ceasar " ++ show cur ++ ": " ++ encode
     putStrLn out
     let c = cur + 1
     if cur /= lim
