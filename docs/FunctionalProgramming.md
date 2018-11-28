@@ -627,8 +627,8 @@ solve(Str, Cur, Lim) ->
   if
       Cur == Lim -> 
         io:fwrite("Done\n");
-      ture ->  
-          solve(Str, C, Lim);
+      ture ->
+        solve(Str, C, Lim);
   end.
 ```
 
@@ -637,3 +637,152 @@ solve(Str, Cur, Lim) ->
 * The reason I later found out is that apparantly the conditions must return a value(neither does) as well as that each return value must be of the same type. This limits if expressions so much that I just refused to use them.
 * The solution I found was to use what I can only describe as function cases. (also used in the offset function)
 * Erlang may be powerful, but I would need a very good reason to use it at all.
+
+
+
+## Scala - Functionaly
+
+### Code
+
+```scala
+// Daniel Nicolas Gisolfi
+// Ceasar Cipher in Scala done functionaly
+object Ceasar {
+    // Given a char shift it by the key and convert
+    // back to char to return
+    def offset(char:Char, key:Int):Char =  {
+        // check if the letters are going out of bounds
+        if (char.toInt + key > 'Z'.toInt) {
+            return (char.toInt + key -26).toChar
+        } else {
+            return (char.toInt + key).toChar
+        }
+    }
+
+    // Iterate through each character of the string and
+    // for each char, send it to offset() and then concat it
+    def encrypt(str:String, key:Int):String = {
+        var encoded:String = "";
+        str.foreach((char: Char) => encoded = encoded.concat((offset(char, key).toString)));
+        return encoded
+    }
+
+    // Just call encrypt but negate the key first
+    def decrypt(str:String, key:Int):String = {
+        return  Ceasar.encrypt(str, -key)
+    }
+
+    // for the desired limit solve the cipher for all values
+    def solve(str:String, cur:Int, lim:Int) {
+        println("Ceasar " + cur + ": " + Ceasar.encrypt(str, cur));
+        // Base case, check if the limits been reached,
+        // otherwise call the function again
+        if(cur != lim) {
+            solve(str, cur+1 , lim);
+        } else {
+            println("Done");
+        }
+    }
+
+    def main(args: Array[String]): Unit = {
+        val og = "HAL";
+        val key = 6;
+
+        val encrypted = Ceasar.encrypt(og, key);
+        val decrypted = Ceasar.decrypt(encrypted, key);
+
+        println("Original  --> " + og);
+        println("Encrypted --> " + encrypted);
+        println("Decrypted --> " + decrypted);
+        Ceasar.solve(og,0,26);
+    }
+
+}
+```
+
+### Output
+
+**Case 1**
+
+```
+Original  --> HAL
+Encrypted --> NGR
+Decrypted --> HAL
+Ceasar 0: HAL
+Ceasar 1: IBM
+Ceasar 2: JCN
+Ceasar 3: KDO
+Ceasar 4: LEP
+Ceasar 5: MFQ
+Ceasar 6: NGR
+Ceasar 7: OHS
+Ceasar 8: PIT
+Ceasar 9: QJU
+Ceasar 10: RKV
+Ceasar 11: SLW
+Ceasar 12: TMX
+Ceasar 13: UNY
+Ceasar 14: VOZ
+Ceasar 15: WPA
+Ceasar 16: XQB
+Ceasar 17: YRC
+Ceasar 18: ZSD
+Ceasar 19: ATE
+Ceasar 20: BUF
+Ceasar 21: CVG
+Ceasar 22: DWH
+Ceasar 23: EXI
+Ceasar 24: FYJ
+Ceasar 25: GZK
+Ceasar 26: HAL
+Done
+```
+
+**Case 2**
+
+```
+Original  --> ORANGUTAN
+Encrypted --> UXGTMAZGT
+Decrypted --> ORANGUTAN
+Ceasar 0: ORANGUTAN
+Ceasar 1: PSBOHVUBO
+Ceasar 2: QTCPIWVCP
+Ceasar 3: RUDQJXWDQ
+Ceasar 4: SVERKYXER
+Ceasar 5: TWFSLZYFS
+Ceasar 6: UXGTMAZGT
+Ceasar 7: VYHUNBAHU
+Ceasar 8: WZIVOCBIV
+Ceasar 9: XAJWPDCJW
+Ceasar 10: YBKXQEDKX
+Ceasar 11: ZCLYRFELY
+Ceasar 12: ADMZSGFMZ
+Ceasar 13: BENATHGNA
+Ceasar 14: CFOBUIHOB
+Ceasar 15: DGPCVJIPC
+Ceasar 16: EHQDWKJQD
+Ceasar 17: FIREXLKRE
+Ceasar 18: GJSFYMLSF
+Ceasar 19: HKTGZNMTG
+Ceasar 20: ILUHAONUH
+Ceasar 21: JMVIBPOVI
+Ceasar 22: KNWJCQPWJ
+Ceasar 23: LOXKDRQXK
+Ceasar 24: MPYLESRYL
+Ceasar 25: NQZMFTSZM
+Ceasar 26: ORANGUTAN
+Done
+```
+
+### Log
+
+#### 2018-11-27
+
+* I remember nothing of Scala from 2 months ago, back to google!
+* I saw "def" and got excited, sadly this is not python...woulda been faster to test it. The only thing I remember from my time with Scala was how horribly slow the compiler was... it's still very slow, even for a 30 line program. 
+* For how slow the compiler it is, it's my favorite compiler of all 5. The error messages are actually helpful(unless a runtime error occurs then its back to hard to read java errors)
+* I'm starting to enjoy programming functionally, it makes everything look very condense and clean...however readability suffers greatly.
+* Recursion is so satisfying to use(I wrote the same function for solve in 4 of the languages)
+* Somehow I found functional programming to be easier than Fortran and COBOL even with the lacking documentation for a lot of the languages
+* The suggestion to save Scala till last was great advice, using the same flow of the ciphers done in ML and Erlang especially I was able to create what I believe is a functionaly programed Cipher in around 1 to 2 hours
+
